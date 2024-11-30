@@ -1,5 +1,6 @@
 package com.uber.UberApp.entities;
 
+import com.uber.UberApp.dto.RiderDto;
 import com.uber.UberApp.entities.enums.PaymentMethod;
 import com.uber.UberApp.entities.enums.RideRequestStatus;
 import jakarta.persistence.*;
@@ -28,7 +29,7 @@ public class RideRequest {
     private LocalDateTime requestTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Rider rider;
+    private RiderDto riderDto;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;

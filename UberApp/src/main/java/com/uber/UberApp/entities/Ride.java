@@ -29,7 +29,7 @@ public class Ride {
     private LocalDateTime createdTime;  // Ride Created Time
 
     @ManyToOne(fetch= FetchType.LAZY)
-    private Rider rider;
+    private Ride ride;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
