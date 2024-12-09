@@ -1,4 +1,6 @@
 package com.uber.UberApp.strategies.impl;
 
-public class DriverMatchingHighestRatedDriverStrategy {
+import com.uber.UberApp.strategies.DriverMatchingStrategy;
+
+public class DriverMatchingHighestRatedDriverStrategy implements DriverMatchingStrategy {
 }
