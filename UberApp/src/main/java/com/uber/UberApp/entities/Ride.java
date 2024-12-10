@@ -39,6 +39,8 @@ public class Ride {
 
     private Double fare;
 
+    private String otp;
+
     private LocalDateTime startAT;  //After Entering OTP
 
     private LocalDateTime endedAt;  //Time at which Ride gets Completed
