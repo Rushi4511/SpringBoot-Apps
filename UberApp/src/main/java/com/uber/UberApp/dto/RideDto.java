@@ -29,10 +29,17 @@ public class RideDto {
     private Point dropLocation;
 
 
-    private LocalDateTime createdTime;  // Ride Created Time
+    private LocalDateTime createdTime;  // Ride Created Time\
+
+    private LocalDateTime startAT;
+
+    private LocalDateTime endedAt;
 
 
-    private RiderDto riderDto;
+
+    private RiderDto rider;
+
+    private DriverDto driverDto;
 
 
     private PaymentMethod paymentMethod;

@@ -5,6 +5,8 @@ import com.uber.UberApp.dto.RideDto;
 import com.uber.UberApp.services.DriverService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DriverServiceImpl implements DriverService {
     @Override
@@ -35,5 +37,10 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public DriverDto getMyProfile() {
         return null;
+    }
+
+    @Override
+    public List<RideDto> getAllMyRides() {
+        return List.of();
     }
 }

@@ -22,7 +22,7 @@ public interface DriverService {
 
     DriverDto getMyProfile();
 
-    List<RideDto> getAllMyRides;
+    List<RideDto> getAllMyRides();
 
 
 }

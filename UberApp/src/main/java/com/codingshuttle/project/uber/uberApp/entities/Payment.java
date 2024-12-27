@@ -1,7 +1,7 @@
-package com.uber.UberApp.entities;
+package com.codingshuttle.project.uber.uberApp.entities;
 
-import com.uber.UberApp.entities.enums.PaymentMethod;
-import com.uber.UberApp.entities.enums.PaymentStatus;
+import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentMethod;
+import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -16,13 +16,13 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
-
     @OneToOne(fetch = FetchType.LAZY)
     private Ride ride;
 
     private Double amount;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     @CreationTimestamp
     private LocalDateTime paymentTime;

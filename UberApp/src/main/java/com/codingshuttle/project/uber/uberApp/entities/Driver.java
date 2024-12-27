@@ -1,11 +1,9 @@
-package com.uber.UberApp.entities;
+package com.codingshuttle.project.uber.uberApp.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.locationtech.jts.geom.Point;
-
 
 @Entity
 @Getter
@@ -17,17 +15,15 @@ public class Driver {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private Double rating;
 
     private Boolean available;
 
-
     private String vehicleId;
 
-    @Column(columnDefinition = "Geometry(Point,4326)")
+    @Column(columnDefinition = "Geometry(Point, 4326)")
     Point currentLocation;
-
 }
