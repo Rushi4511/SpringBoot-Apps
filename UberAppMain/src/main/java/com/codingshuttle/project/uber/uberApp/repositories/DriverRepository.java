@@ -1,7 +1,6 @@
 package com.codingshuttle.project.uber.uberApp.repositories;
 
 import com.codingshuttle.project.uber.uberApp.entities.Driver;
-import com.codingshuttle.project.uber.uberApp.entities.RideRequest;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
