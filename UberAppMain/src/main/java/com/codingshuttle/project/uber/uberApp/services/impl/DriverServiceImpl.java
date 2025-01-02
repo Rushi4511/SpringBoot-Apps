@@ -6,11 +6,13 @@ import com.codingshuttle.project.uber.uberApp.dto.RiderDto;
 import com.codingshuttle.project.uber.uberApp.entities.Driver;
 import com.codingshuttle.project.uber.uberApp.entities.Ride;
 import com.codingshuttle.project.uber.uberApp.entities.RideRequest;
+import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentMethod;
 import com.codingshuttle.project.uber.uberApp.entities.enums.RideRequestStatus;
 import com.codingshuttle.project.uber.uberApp.entities.enums.RideStatus;
 import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
 import com.codingshuttle.project.uber.uberApp.repositories.DriverRepository;
 import com.codingshuttle.project.uber.uberApp.services.DriverService;
+import com.codingshuttle.project.uber.uberApp.services.PaymentService;
 import com.codingshuttle.project.uber.uberApp.services.RideRequestService;
 import com.codingshuttle.project.uber.uberApp.services.RideService;
 import jakarta.transaction.Transactional;
@@ -32,7 +34,8 @@ public class DriverServiceImpl implements DriverService {
     private final RideService rideService;
 
     private final ModelMapper modelMapper;
-    private final DriverService driverService;
+
+    private final PaymentService paymentService;
 
     @Override
     @Transactional
@@ -84,7 +87,9 @@ public class DriverServiceImpl implements DriverService {
 
 
         rideService.updateRideStatus(ride,RideStatus.CANCELLED);
-        driverService.updateDriverAvailability(ride.getDriver(),true);
+        driver.setAvailable(true);
+        driverRepository.save(driver);
+
 
 
         return modelMapper.map(ride, RideDto.class);
@@ -112,14 +117,37 @@ public class DriverServiceImpl implements DriverService {
 
         ride.setStartedAt(LocalDateTime.now());
 
+
+
         Ride savedRide =rideService.updateRideStatus(ride,RideStatus.ONGOING);
+
+        paymentService.createNewPayment(savedRide);
         return modelMapper.map(savedRide,RideDto.class);
 
     }
 
     @Override
     public RideDto endRide(Long rideId) {
-        return null;
+        Ride ride= rideService.getRideById(rideId);
+        Driver driver =getCurrentDriver();
+
+        if (!driver.equals(ride.getDriver())){
+            throw new RuntimeException("Driver Cannot Start The Ride As He Has not Accepted it Earlier");
+        }
+
+
+        if(!ride.getRideStatus().equals(RideStatus.ONGOING)){
+            throw new RuntimeException("Ride Status Is not Confirmed, Hence Cannot be Started,STATUS: "+ride.getRideStatus());
+        }
+
+        ride.setEndedAt(LocalDateTime.now());
+        Ride savedRide=rideService.updateRideStatus(ride,RideStatus.ENDED);
+        updateDriverAvailability(driver,true);
+
+        paymentService.processPayment(ride);
+
+        return modelMapper.map(savedRide,RideDto.class);
+
     }
 
     @Override

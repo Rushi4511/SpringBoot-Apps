@@ -8,6 +8,7 @@ import com.codingshuttle.project.uber.uberApp.entities.enums.RideStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+
 public interface RideService {
 
     Ride getRideById(Long rideId);

@@ -1,4 +1,11 @@
 package com.codingshuttle.project.uber.uberApp.services;
 
-public class WalletTransactionService {
+import com.codingshuttle.project.uber.uberApp.dto.WalletTransactionDto;
+import com.codingshuttle.project.uber.uberApp.entities.WalletTransaction;
+import org.springframework.stereotype.Service;
+
+
+public interface WalletTransactionService {
+
+    void createNewWalletTransaction(WalletTransaction walletTransaction);
 }
