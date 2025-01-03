@@ -6,7 +6,6 @@ import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentStatus;
 import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
 import com.codingshuttle.project.uber.uberApp.repositories.PaymentRepository;
 import com.codingshuttle.project.uber.uberApp.services.PaymentService;
-import com.codingshuttle.project.uber.uberApp.strategies.PaymentStrategy;
 import com.codingshuttle.project.uber.uberApp.strategies.PaymentStrategyManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

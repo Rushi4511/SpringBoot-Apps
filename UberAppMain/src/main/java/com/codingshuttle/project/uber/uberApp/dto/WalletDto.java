@@ -1,8 +1,6 @@
 package com.codingshuttle.project.uber.uberApp.dto;
 
-import com.codingshuttle.project.uber.uberApp.entities.User;
 import com.codingshuttle.project.uber.uberApp.entities.WalletTransaction;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

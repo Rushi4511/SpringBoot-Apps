@@ -1,12 +1,9 @@
 package com.codingshuttle.project.uber.uberApp.dto;
 
 import com.codingshuttle.project.uber.uberApp.entities.Ride;
-import com.codingshuttle.project.uber.uberApp.entities.Wallet;
 import com.codingshuttle.project.uber.uberApp.entities.enums.TransactionMethod;
 import com.codingshuttle.project.uber.uberApp.entities.enums.TransactionType;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WalletTransactionDto {
 
 

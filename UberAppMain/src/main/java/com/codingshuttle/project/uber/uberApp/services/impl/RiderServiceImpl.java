@@ -11,6 +11,7 @@ import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundExcepti
 import com.codingshuttle.project.uber.uberApp.repositories.RideRequestRepository;
 import com.codingshuttle.project.uber.uberApp.repositories.RiderRepository;
 import com.codingshuttle.project.uber.uberApp.services.DriverService;
+import com.codingshuttle.project.uber.uberApp.services.RatingService;
 import com.codingshuttle.project.uber.uberApp.services.RideService;
 import com.codingshuttle.project.uber.uberApp.services.RiderService;
 import com.codingshuttle.project.uber.uberApp.strategies.RideStrategyManager;
@@ -39,6 +40,8 @@ public class RiderServiceImpl implements RiderService {
     private final RideService rideService;
 
     private final DriverService driverService;
+
+    private final RatingService ratingService;
 
 
     @Override
@@ -86,13 +89,30 @@ public class RiderServiceImpl implements RiderService {
         driverService.updateDriverAvailability(ride.getDriver(),true);
 
 
+
         return modelMapper.map(savedRide,RideDto.class);
 
     }
 
     @Override
     public DriverDto rateDriver(Long rideId, Integer rating) {
-        return null;
+
+        Ride ride=rideService.getRideById(rideId);
+        Rider rider = getCurrentRider();
+
+        if (!rider.equals(ride.getRider())){
+            throw new RuntimeException("Rider is not the Owner Of the Ride");
+        }
+
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)){
+            throw new RuntimeException("Ride Status Is not Ended , Hence Cannot be Started,STATUS: "+ride.getRideStatus());
+        }
+
+
+        return ratingService.rateDriver(ride,rating);
+
+
     }
 
     @Override

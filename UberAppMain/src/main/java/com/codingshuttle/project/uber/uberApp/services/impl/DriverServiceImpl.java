@@ -6,15 +6,11 @@ import com.codingshuttle.project.uber.uberApp.dto.RiderDto;
 import com.codingshuttle.project.uber.uberApp.entities.Driver;
 import com.codingshuttle.project.uber.uberApp.entities.Ride;
 import com.codingshuttle.project.uber.uberApp.entities.RideRequest;
-import com.codingshuttle.project.uber.uberApp.entities.enums.PaymentMethod;
 import com.codingshuttle.project.uber.uberApp.entities.enums.RideRequestStatus;
 import com.codingshuttle.project.uber.uberApp.entities.enums.RideStatus;
 import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
 import com.codingshuttle.project.uber.uberApp.repositories.DriverRepository;
-import com.codingshuttle.project.uber.uberApp.services.DriverService;
-import com.codingshuttle.project.uber.uberApp.services.PaymentService;
-import com.codingshuttle.project.uber.uberApp.services.RideRequestService;
-import com.codingshuttle.project.uber.uberApp.services.RideService;
+import com.codingshuttle.project.uber.uberApp.services.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,11 +27,13 @@ public class DriverServiceImpl implements DriverService {
     private final RideRequestService rideRequestService;
     private final DriverRepository driverRepository;
 
+
     private final RideService rideService;
 
     private final ModelMapper modelMapper;
 
     private final PaymentService paymentService;
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -54,7 +52,8 @@ public class DriverServiceImpl implements DriverService {
 
         }
         currentDriver.setAvailable(false);
-        Driver savedDriver = driverRepository.save(currentDriver);
+//        Driver savedDriver = driverRepository.save(currentDriver);
+        Driver savedDriver =updateDriverAvailability(currentDriver,true);
 
         Ride ride =rideService.createNewRide(rideRequest,savedDriver);
 
@@ -87,7 +86,7 @@ public class DriverServiceImpl implements DriverService {
 
 
         rideService.updateRideStatus(ride,RideStatus.CANCELLED);
-        driver.setAvailable(true);
+        updateDriverAvailability(driver, true);
         driverRepository.save(driver);
 
 
@@ -122,6 +121,7 @@ public class DriverServiceImpl implements DriverService {
         Ride savedRide =rideService.updateRideStatus(ride,RideStatus.ONGOING);
 
         paymentService.createNewPayment(savedRide);
+
         return modelMapper.map(savedRide,RideDto.class);
 
     }
@@ -152,7 +152,21 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public RiderDto rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride=rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if (!driver.equals(ride.getDriver())){
+            throw new RuntimeException("Driver is not the Owner Of the Ride");
+        }
+
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)){
+            throw new RuntimeException("Ride Status Is not Ended , Hence Cannot be Started,STATUS: "+ride.getRideStatus());
+        }
+
+
+        return ratingService.rateRider(ride,rating);
+
     }
 
     @Override
@@ -186,5 +200,10 @@ public class DriverServiceImpl implements DriverService {
         toUpdateDriver.setAvailable(available);
         return driverRepository.save(toUpdateDriver);
 
+    }
+
+    @Override
+    public Driver createNewDriver(Driver createDriver) {
+        return driverRepository.save(createDriver);
     }
 }

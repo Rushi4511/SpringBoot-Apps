@@ -1,6 +1,5 @@
 package com.codingshuttle.project.uber.uberApp.services.impl;
 
-import com.codingshuttle.project.uber.uberApp.dto.WalletTransactionDto;
 import com.codingshuttle.project.uber.uberApp.entities.Ride;
 import com.codingshuttle.project.uber.uberApp.entities.User;
 import com.codingshuttle.project.uber.uberApp.entities.Wallet;
@@ -12,8 +11,6 @@ import com.codingshuttle.project.uber.uberApp.repositories.WalletRepository;
 import com.codingshuttle.project.uber.uberApp.services.WalletService;
 import com.codingshuttle.project.uber.uberApp.services.WalletTransactionService;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -29,7 +26,9 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public Wallet addMoneyToWallet(User user, Double amount, String transactionId, Ride ride, TransactionMethod transactionMethod) {
+    public Wallet addMoneyToWallet(User user, Double amount,
+                                   String transactionId, Ride ride,
+                                   TransactionMethod transactionMethod) {
 
         Wallet wallet = walletRepository.findByUser(user).orElseThrow(()->new ResourceNotFoundException("No wallet Found Of USer:"+user.getId()));
 
@@ -46,13 +45,18 @@ public class WalletServiceImpl implements WalletService {
 
         walletTransactionService.createNewWalletTransaction(walletTransaction);
 
+        System.out.println(walletTransaction);
+        System.out.println(wallet);
+
         return walletRepository.save(wallet);
 
     }
 
     @Override
     @Transactional
-    public Wallet deductMoneyFromWallet(User user,double amount,String transactionId, Ride ride, TransactionMethod transactionMethod) {
+    public Wallet deductMoneyFromWallet(User user, Double amount,
+                                        String transactionId, Ride ride,
+                                        TransactionMethod transactionMethod) {
         Wallet deductingWallet =walletRepository.findByUser(user).orElseThrow(()->new ResourceNotFoundException("No Wallet found for User:"+user));
         deductingWallet.setBalance(deductingWallet.getBalance()-amount);
 
@@ -65,11 +69,13 @@ public class WalletServiceImpl implements WalletService {
                 .amount(amount)
                 .build();
 
-//        walletTransactionService.createNewWalletTransaction(walletTransaction);
+        walletTransactionService.createNewWalletTransaction(walletTransaction);
 //
 
-        deductingWallet.getTransactions().add(walletTransaction);
+//        deductingWallet.getTransactions().add(walletTransaction);
 
+        System.out.println(walletTransaction);
+        System.out.println(deductingWallet);
 
 
         return walletRepository.save(deductingWallet);
