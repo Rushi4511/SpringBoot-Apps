@@ -17,12 +17,12 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/signUp")
+    @PostMapping(path ="/signUp")
     ResponseEntity<UserDto> signUp(@RequestBody SignupDto signupDto){
-        return new  ResponseEntity<>(authService.signup(signupDto), HttpStatus.CREATED);
+        return new  ResponseEntity<>(authService.signUp(signupDto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/onBoardNewDriver/{userId}")
+    @PostMapping(path="/onBoardNewDriver/{userId}")
     ResponseEntity<DriverDto> onBoardNewDriver(@PathVariable Long userId, @RequestBody OnBoardDriverDto onBoardDriverDto){
         return new ResponseEntity<>(authService.onboardNewDriver(userId,onBoardDriverDto.getVehicleId()),HttpStatus.CREATED);
     }

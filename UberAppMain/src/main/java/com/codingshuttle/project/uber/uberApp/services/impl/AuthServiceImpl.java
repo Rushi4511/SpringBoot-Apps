@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public UserDto signup(SignupDto signupDto) {
+    public UserDto signUp(SignupDto signupDto) {
 
         User user =userRepository.findByEmail(signupDto.getEmail()).orElse(null);
         if(user!=null){

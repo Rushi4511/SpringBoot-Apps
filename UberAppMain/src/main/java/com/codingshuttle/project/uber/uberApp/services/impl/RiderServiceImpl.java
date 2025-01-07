@@ -139,7 +139,7 @@ public class RiderServiceImpl implements RiderService {
                 .rating(0.0)
                 .build();
 
-        return riderRepository.save(new Rider());
+        return riderRepository.save(rider);
 
     }
 
