@@ -2,12 +2,14 @@ package com.codingshuttle.project.uber.uberApp.advices;
 
 import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
 import com.codingshuttle.project.uber.uberApp.exceptions.RuntimeConflictException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +58,40 @@ public  class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(apiError,HttpStatus.BAD_REQUEST);
+    }
+
+
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundException exception){
+//        ApiError apiError = ApiError.builder()
+//                .status(HttpStatus.NOT_FOUND)
+//                .message(exception.getMessage())
+//                .build();
+//        return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
+//    }
+
+    // Handle AuthenticationException
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiError> handleAuthenticationException(AuthenticationException exception){
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(exception.getMessage())
+                .build();
+        return new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
+    }
+
+// We can not handle JwtException(ExpiredJwtException and all child) using GlobalExceptionHandler
+// because it can't handle exceptions that occurs before running Dispatcher
+// Servlet so use HandlerExceptionResolver
+
+    //Handle JwtException
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiError> handleJwtException(JwtException exception){
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(exception.getMessage())
+                .build();
+        return new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
     }
 
 

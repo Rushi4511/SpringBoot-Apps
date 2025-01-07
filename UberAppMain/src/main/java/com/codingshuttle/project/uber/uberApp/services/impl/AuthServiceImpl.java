@@ -96,8 +96,8 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeConflictException("");
 
         Driver createDriver =Driver.builder()
-                .id(userId)
-                .rating(4.0)
+                .user(user)
+                .rating(0.0)
                 .vehicleId(vehicleId)
                 .available(true)
                 .build();
@@ -109,6 +109,16 @@ public class AuthServiceImpl implements AuthService {
 
         return modelMapper.map(saveDriver, DriverDto.class);
 
+
+    }
+
+    @Override
+    public String refreshToken(String refreshToken){
+
+        Long userId = jwtService.getUserIdFromToken(refreshToken);
+        User user =userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User not Found for the Id"+userId));
+
+        return jwtService.generateRefreshToken(user);
 
     }
 }
