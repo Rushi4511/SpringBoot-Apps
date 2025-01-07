@@ -1,10 +1,10 @@
 package com.codingshuttle.project.uber.uberApp.controllers;
 
-import com.codingshuttle.project.uber.uberApp.dto.DriverDto;
-import com.codingshuttle.project.uber.uberApp.dto.OnBoardDriverDto;
-import com.codingshuttle.project.uber.uberApp.dto.SignupDto;
-import com.codingshuttle.project.uber.uberApp.dto.UserDto;
+import com.codingshuttle.project.uber.uberApp.dto.*;
 import com.codingshuttle.project.uber.uberApp.services.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +25,20 @@ public class AuthController {
     @PostMapping(path="/onBoardNewDriver/{userId}")
     ResponseEntity<DriverDto> onBoardNewDriver(@PathVariable Long userId, @RequestBody OnBoardDriverDto onBoardDriverDto){
         return new ResponseEntity<>(authService.onboardNewDriver(userId,onBoardDriverDto.getVehicleId()),HttpStatus.CREATED);
+    }
+
+
+    @PostMapping(path = "/login")
+    ResponseEntity<LoginResponseDto> login(@RequestBody  LoginRequestDto loginRequestDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+
+        String token[] =authService.login(loginRequestDto.getEmail(),loginRequestDto.getPassword());
+
+        Cookie cookie =new Cookie("token",token[1]);
+        cookie.setHttpOnly(true);
+
+        httpServletResponse.addCookie(cookie);
+
+        return  ResponseEntity.ok(new LoginResponseDto(token[0]));
     }
 
 
